@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Admin | Barbearia</title>
+<link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+
+  body, html { margin:0; padding:0; font-family: 'Montserrat', sans-serif; background: #f5f5f5; color: #333; }
+  a { text-decoration: none; color: inherit; }
+
+  /* Header */
+  header {
+    background-color: #1e1e2f;
+    color: #fff;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  header h1 { margin: 0; font-size: 1.8rem; font-weight: 700; }
+  header a { color: #fff; font-weight: bold; transition: color 0.3s; }
+  header a:hover { color: #ffcc00; }
+
+  /* Container */
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 30px auto;
+    padding: 0 20px;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    height: fit-content;
+  }
+  .sidebar h2 { margin-top: 0; font-size: 1.2rem; color: #1e1e2f; border-bottom: 2px solid #1e1e2f; padding-bottom: 5px; }
+  .sidebar form { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+  .sidebar input, .sidebar button, .sidebar select { padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 0.95rem; }
+  .sidebar button { background: #1e1e2f; color: #fff; border: none; cursor: pointer; font-weight: 600; transition: 0.3s; }
+  .sidebar button:hover { background: #ffcc00; color: #000; }
+
+  /* Main */
+  .main { display: flex; flex-direction: column; gap: 25px; }
+
+  /* Dashboard Cards */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+  .card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.2s;
+  }
+  .card:hover { transform: translateY(-5px); }
+  .card h3 { margin: 0; font-size: 1rem; color: #1e1e2f; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .card p { font-size: 1.5rem; font-weight: bold; color: #3f3f5f; margin: 0; }
+
+  /* Agendamentos */
+  .agendamentos-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .card-agendamento {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    padding: 15px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .card-agendamento:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+  .card-agendamento .info p { margin: 6px 0; font-size: 0.95rem; color: #333; }
+  .card-agendamento .whatsapp-link { color: #25D366; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
+  .card-agendamento .acoes { margin-top: 10px; text-align: right; }
+  .card-agendamento .acoes a.excluir {
+    background: #e63946;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s;
+  }
+  .card-agendamento .acoes a.excluir:hover { background: #d62828; }
+
+  @media (max-width: 900px) {
+    .container { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>💈 Painel Admin</h1>
+  <a href="{{ url_for('logout_admin') }}"><i class='bx bx-log-out'></i> Sair</a>
+</header>
+
+<div class="container">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>Adicionar Barbeiro</h2>
+    <form action="{{ url_for('adicionar_barbeiro') }}" method="POST" enctype="multipart/form-data">
+      <input type="text" name="nome" placeholder="Nome do barbeiro" required>
+      <input type="file" name="foto" accept="image/*">
+      <button type="submit">Adicionar</button>
+    </form>
+
+    <h2>Adicionar Data</h2>
+    <form action="{{ url_for('adicionar_data') }}" method="POST">
+      <input type="date" name="nova_data" required>
+      <button type="submit">Adicionar</button>
+    </form>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <!-- Dashboard Cards -->
+    <div class="cards">
+      <div class="card">
+        <h3><i class='bx bx-user'></i> Total Barbeiros</h3>
+        <p>{{ barbeiros|length }}</p>
+      </div>
+      <div class="card">
+        <h3><i class='bx bx-calendar'></i> Total Datas</h3>
+        <p>{{ datas|length }}</p>
+      </div>
+      <div class="card">
+        <h3><i class='bx bx-time'></i> Total Agendamentos</h3>
+        <p>{{ horarios|length }}</p>
+      </div>
+    </div>
+
+    <!-- Agendamentos -->
+    <h2>Horários Agendados</h2>
+    <div class="agendamentos-cards">
+      {% for h in horarios %}
+      <div class="card-agendamento" onclick="mostrarDetalhes('{{ h.nome_cliente }}', '{{ h.telefone }}', '{{ h.servico }}', '{{ h.barbeiro_nome }}', '{{ h.data }}', '{{ h.hora }}', '{{ h.observacoes }}')">
+        <div class="info">
+          <p><strong>Cliente:</strong> {{ h.nome_cliente }}</p>
+          <p><strong>Telefone:</strong> 
+            <a href="https://wa.me/{{ h.telefone|replace('(', '')|replace(')', '')|replace(' ', '')|replace('-', '') }}" target="_blank" class="whatsapp-link">
+              <i class='bx bxl-whatsapp'></i> {{ h.telefone }}
+            </a>
+          </p>
+          <p><strong>Barbeiro:</strong> {{ h.barbeiro_nome }}</p>
+          <p><strong>Data:</strong> {{ h.data }} | <strong>Hora:</strong> {{ h.hora }}</p>
+        </div>
+        <div class="acoes">
+          <a href="#" onclick="event.stopPropagation(); confirmarExclusao('{{ url_for('excluir_horario', id=h.id) }}')" class="excluir">Excluir</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+// Modal para detalhes do agendamento
+function mostrarDetalhes(nome, telefone, servico, barbeiro, data, hora, observacoes){
+    let servicosFormatados = servico.split(',').map(s => s.trim()).join('<br>');
+    let obs = observacoes ? `<br><strong>Observações:</strong> ${observacoes}` : '';
+    Swal.fire({
+        title: `<strong>Detalhes de ${nome}</strong>`,
+        html: `<p><strong>Telefone:</strong> ${telefone}</p>
+               <p><strong>Barbeiro:</strong> ${barbeiro}</p>
+               <p><strong>Data:</strong> ${data} | <strong>Hora:</strong> ${hora}</p>
+               <p><strong>Serviços:</strong><br>${servicosFormatados}</p>
+               ${obs}`,
+        icon: 'info',
+        confirmButtonText: 'Fechar'
+    });
+}
+
+// Confirmação de exclusão
+function confirmarExclusao(url){
+    Swal.fire({
+        title: 'Tem certeza?',
+        text: "Essa ação não pode ser desfeita!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sim, excluir!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) { window.location.href = url; }
+    });
+}
+</script>
+
+</body>
+</html>
+

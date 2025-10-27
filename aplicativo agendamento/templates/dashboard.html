@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard | Barbearia</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        background: #111;
+        color: #fff;
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    nav a {
+        color: #fff;
+        text-decoration: none;
+        margin-left: 20px;
+        font-weight: 500;
+        transition: 0.3s;
+    }
+
+    nav a:hover {
+        color: #d4af37;
+    }
+
+    .dashboard-container {
+        max-width: 1000px;
+        margin: 50px auto;
+        text-align: center;
+    }
+
+    h2 {
+        color: #333;
+        margin-bottom: 30px;
+    }
+
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        padding: 0 20px;
+    }
+
+    .card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card h3 {
+        margin-bottom: 10px;
+        color: #111;
+    }
+
+    .card p {
+        color: #555;
+        font-size: 0.95rem;
+    }
+
+    .btn {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 20px;
+        background: #d4af37;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .btn:hover {
+        background: #b6932f;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>💈 Dashboard Administrativo</h1>
+    <nav>
+        <a href="/">Início</a>
+        <a href="{{ url_for('admin') }}">Painel Admin</a>
+        <a href="{{ url_for('logout_admin') }}">Sair</a>
+    </nav>
+</header>
+
+<div class="dashboard-container">
+    <h2>Bem-vindo, Administrador!</h2>
+
+    <div class="cards">
+        <div class="card">
+            <h3>👨‍🔧 Barbeiros</h3>
+            <p>Gerencie a equipe de barbeiros e seus status de disponibilidade.</p>
+            <a href="{{ url_for('admin') }}" class="btn">Acessar</a>
+        </div>
+
+        <div class="card">
+            <h3>📅 Datas e Horários</h3>
+            <p>Adicione, edite ou remova horários disponíveis para agendamentos.</p>
+            <a href="{{ url_for('admin') }}" class="btn">Gerenciar</a>
+        </div>
+
+        <div class="card">
+            <h3>📋 Agendamentos</h3>
+            <p>Visualize e controle todos os horários reservados pelos clientes.</p>
+            <a href="{{ url_for('admin') }}" class="btn">Ver Agendamentos</a>
+        </div>
+
+        <div class="card">
+            <h3>🚪 Sair</h3>
+            <p>Finalizar sessão e retornar à página inicial.</p>
+            <a href="{{ url_for('logout_admin') }}" class="btn">Logout</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

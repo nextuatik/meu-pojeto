@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agendamento | Barbearia Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+/* --- Reset e Font --- */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
+body { background: #f2f2f2; color: #333; }
+
+/* Header */
+header { background: #1a1a1a; color: #fff; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+header h1 { font-size: 1.9em; }
+nav a { color: #fff; margin-left: 20px; text-decoration: none; font-weight: 500; transition: color 0.3s; }
+nav a:hover { color: #ffd700; }
+
+/* Container */
+.container { max-width: 750px; margin: 50px auto; background: #fff; border-radius: 15px; padding: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+
+/* Titles */
+h2 { text-align: center; margin-bottom: 30px; font-weight: 700; color: #1a1a1a; }
+
+/* Labels e Inputs */
+label { font-weight: 500; margin-top: 15px; display: block; }
+input, select, textarea, button { width: 100%; padding: 12px 15px; margin-top: 5px; border-radius: 10px; border: 1px solid #ccc; font-size: 1em; }
+textarea { resize: none; }
+
+/* Button */
+button { background: #1a1a1a; color: #fff; font-weight: 600; cursor: pointer; margin-top: 25px; transition: all 0.3s ease; }
+button:hover { background: #ffd700; color: #000; }
+
+/* Serviços cards */
+.checkbox-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 10px; }
+.checkbox-card { background: #f9f9f9; padding: 15px; border-radius: 12px; border: 1px solid #ddd; display: flex; align-items: center; cursor: pointer; transition: all 0.3s ease; }
+.checkbox-card input { margin-right: 10px; }
+.checkbox-card:hover { background: #ffd700; color: #000; border-color: #ffc107; }
+
+/* Responsivo */
+@media(max-width:600px){ .container{ padding: 25px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>💈 Barbearia Premium</h1>
+  <nav>
+    <a href="{{ url_for('index') }}">Início</a>
+    <a href="{{ url_for('agendamento') }}">Agendamento</a>
+    <a href="{{ url_for('dashboard') }}">Painel</a>
+  </nav>
+</header>
+
+<div class="container">
+  <h2>Agende seu horário</h2>
+
+  <form id="formAgendamento">
+    <label>Nome completo:</label>
+    <input type="text" name="nome" required placeholder="Ex: João Silva">
+
+    <label>Telefone / WhatsApp:</label>
+    <input type="tel" name="telefone" required placeholder="(99) 99999-9999">
+
+    <label>Serviços desejados:</label>
+    <div class="checkbox-group">
+      <label class="checkbox-card"><input type="checkbox" name="servicos" value="CORTE DEGRADÊ"> CORTE DEGRADÊ</label>
+      <label class="checkbox-card"><input type="checkbox" name="servicos" value="CORTE SOCIAL"> CORTE SOCIAL</label>
+      <label class="checkbox-card"><input type="checkbox" name="servicos" value="SOBRANCELHA"> SOBRANCELHA</label>
+      <label class="checkbox-card"><input type="checkbox" name="servicos" value="BARBA"> BARBA</label>
+      <label class="checkbox-card"><input type="checkbox" name="servicos" value="CAVANHAQUE"> CAVANHAQUE</label>
+      <label class="checkbox-card"><input type="checkbox" name="servicos" value="PIGMENTAÇÃO"> PIGMENTAÇÃO</label>
+    </div>
+
+    <label>Escolha o barbeiro:</label>
+    <select id="barbeiro" name="barbeiro" required>
+      <option value="">Selecione</option>
+      {% for b in barbeiros %}
+      <option value="{{ b.nome }}">{{ b.nome }}</option>
+      {% endfor %}
+    </select>
+
+    <label>Data do atendimento:</label>
+    <input type="date" id="data" name="data" required min="{{ hoje }}">
+
+    <label>Horário:</label>
+    <select id="hora" name="hora" required>
+      <option value="">Escolha barbeiro e data</option>
+    </select>
+
+    <label>Observações:</label>
+    <textarea name="observacoes" rows="3" placeholder="Ex: Prefiro corte fade alto"></textarea>
+
+    <button type="submit">Enviar Agendamento</button>
+  </form>
+</div>
+
+<script>
+const barbeiro = document.getElementById('barbeiro');
+const dataInput = document.getElementById('data');
+const horaSelect = document.getElementById('hora');
+
+async function atualizarHorarios() {
+    const barbeiroVal = barbeiro.value;
+    const dataVal = dataInput.value;
+    if (!barbeiroVal || !dataVal) {
+        horaSelect.innerHTML = '<option value="">Escolha barbeiro e data</option>';
+        return;
+    }
+    try {
+        const res = await fetch(`/horarios_disponiveis?barbeiro=${barbeiroVal}&data=${dataVal}`);
+        const lista = await res.json();
+        horaSelect.innerHTML = '';
+        if (lista.length === 0) {
+            horaSelect.innerHTML = '<option value="">Sem horários disponíveis</option>';
+        } else {
+            lista.forEach(h => {
+                const opt = document.createElement('option');
+                opt.value = h;
+                opt.textContent = h;
+                horaSelect.appendChild(opt);
+            });
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+barbeiro.addEventListener('change', atualizarHorarios);
+dataInput.addEventListener('change', atualizarHorarios);
+
+document.getElementById('formAgendamento').addEventListener('submit', async function(e){
+    e.preventDefault();
+    const formData = new FormData(this);
+    const servicosSelecionados = Array.from(this.querySelectorAll('input[name="servicos"]:checked'))
+                                      .map(cb => cb.value);
+    formData.delete('servicos');
+    servicosSelecionados.forEach(s => formData.append('servico', s));
+
+    try {
+        const res = await fetch('/enviar', { method: 'POST', body: formData });
+        const data = await res.json();
+        if(data.sucesso === "1"){
+            Swal.fire('✅ Agendamento confirmado!', '', 'success');
+            this.reset();
+            horaSelect.innerHTML = '<option value="">Escolha barbeiro e data</option>';
+        } else {
+            Swal.fire('⚠ Horário já ocupado!', 'Escolha outro horário.', 'error');
+        }
+    } catch (err) {
+        Swal.fire('❌ Erro no servidor', 'Tente novamente mais tarde.', 'error');
+        console.error(err);
+    }
+});
+</script>
+</body>
+</html>

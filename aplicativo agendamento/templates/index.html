@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barbearia 14 de Maio</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<style>
+  /* Reset */
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Arial', sans-serif; background:#f5f5f5; color:#333; scroll-behavior:smooth; }
+
+  /* Header */
+  header { display:flex; justify-content:space-between; align-items:center; padding:20px 40px; background:#1f1f1f; color:#fff; position:sticky; top:0; z-index:1000; }
+  header a { color:#fff; text-decoration:none; margin-left:25px; font-weight:bold; transition:0.3s; }
+  header a:hover { color:#ffcc00; }
+  .logo { font-size:1.8em; font-weight:bold; }
+
+  /* Hero Parallax */
+  .hero { 
+    background: url('{{ url_for("static", filename="images/barbearia.jpg") }}') center/cover no-repeat fixed; 
+    height:80vh; display:flex; align-items:center; justify-content:center; text-align:center; flex-direction:column; color:#fff;
+  }
+  .hero h1 { font-size:3.5em; margin-bottom:15px; text-shadow:0 4px 15px rgba(0,0,0,0.5); animation:fadeUp 1s ease-out forwards; opacity:0; }
+  .hero p { font-size:1.3em; margin-bottom:25px; text-shadow:0 3px 10px rgba(0,0,0,0.5); animation:fadeUp 1.5s ease-out forwards; opacity:0; }
+  .btn { background-color:#ffcc00; padding:15px 30px; border-radius:10px; font-weight:bold; text-decoration:none; color:#000; transition:all 0.3s ease; animation:fadeUp 2s ease-out forwards; opacity:0; }
+  .btn:hover { background-color:#1f1f1f; color:#fff; }
+
+  @keyframes fadeUp {
+    0% { transform: translateY(30px); opacity:0; }
+    100% { transform: translateY(0); opacity:1; }
+  }
+
+  /* Sections */
+  section { padding:70px 20px; text-align:center; }
+  section h2 { font-size:2.5em; margin-bottom:40px; color:#1f1f1f; }
+
+  /* Service Cards */
+  .cards { display:flex; justify-content:center; flex-wrap:wrap; gap:25px; }
+  .card { background:#fff; padding:30px 20px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.1); width:250px; transition:all 0.3s ease; opacity:0; transform:translateY(40px); }
+  .card:hover { transform:translateY(-10px); box-shadow:0 15px 30px rgba(0,0,0,0.15); }
+  .card i { font-size:3em; margin-bottom:15px; color:#ffcc00; }
+
+  /* Team Section */
+  .equipe { display:flex; justify-content:center; flex-wrap:wrap; gap:25px; margin-top:30px; }
+  .barbeiro { background:#fff; padding:20px; border-radius:15px; box-shadow:0 8px 25px rgba(0,0,0,0.1); width:180px; text-align:center; opacity:0; transform:translateY(40px); transition:all 0.5s ease; }
+  .barbeiro img { width:100%; border-radius:50%; margin-bottom:12px; }
+
+  /* WhatsApp Button */
+  .whatsapp { position:fixed; bottom:25px; right:25px; background:#25d366; color:#fff; font-size:2em; padding:15px 18px; border-radius:50%; box-shadow:0 5px 15px rgba(0,0,0,0.3); text-decoration:none; transition:0.3s; }
+  .whatsapp:hover { transform:scale(1.1); }
+
+  /* Responsivo */
+  @media (max-width: 1024px){
+    header { flex-direction: column; gap:10px; }
+    .hero h1 { font-size:2.8em; }
+    .hero p { font-size:1.1em; }
+    .cards { justify-content: center; gap:15px; }
+  }
+  @media (max-width: 768px){
+    .hero h1 { font-size:2.2em; }
+    .hero p { font-size:1em; }
+    .card { width:200px; padding:20px; }
+    .barbeiro { width:150px; padding:15px; }
+  }
+  @media (max-width: 480px){
+    .hero { height:60vh; padding:10px; }
+    .hero h1 { font-size:1.8em; }
+    .hero p { font-size:0.9em; }
+    .btn { padding:10px 20px; font-size:0.9em; }
+    header a { font-size:0.9em; margin-left:15px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">💈 Barbearia 14 de Maio</div>
+  <nav>
+    <a href="{{ url_for('index') }}">Início</a>
+    <a href="{{ url_for('agendamento') }}">Agendamento</a>
+    <a href="{{ url_for('dashboard') }}">Painel</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Bem-vindo à Barbearia 14 de Maio</h1>
+  <p>Profissionalismo, estilo e cuidado para você</p>
+  <a href="{{ url_for('agendamento') }}" class="btn">Agende Agora</a>
+</section>
+
+<section class="servicos">
+  <h2>Nossos Serviços</h2>
+  <div class="cards">
+    <div class="card">
+      <i class="fas fa-cut"></i>
+      <h3>Corte</h3>
+      <p>Cortes modernos e clássicos para todos os estilos.</p>
+    </div>
+    <div class="card">
+      <i class="fas fa-beard"></i>
+      <h3>Barba</h3>
+      <p>Acabamento perfeito e cuidados especiais com a pele.</p>
+    </div>
+    <div class="card">
+      <i class="fas fa-eye"></i>
+      <h3>Sobrancelha</h3>
+      <p>Design e harmonização facial para valorizar seu visual.</p>
+    </div>
+    <div class="card">
+      <i class="fas fa-paint-brush"></i>
+      <h3>Pigmentação</h3>
+      <p>Realce o estilo com pigmentação capilar profissional.</p>
+    </div>
+  </div>
+</section>
+
+<section class="equipe">
+  <h2>Conheça nossos barbeiros</h2>
+  {% for b in barbeiros %}
+  <div class="barbeiro">
+    <img src="{{ b.foto_url }}" alt="{{ b.nome }}">
+    <h4>{{ b.nome }}</h4>
+  </div>
+  {% endfor %}
+</section>
+
+<a href="https://wa.me/5599991495251" class="whatsapp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+<script>
+  // Scroll Reveal Animation
+  const cards = document.querySelectorAll('.card, .barbeiro');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.style.opacity = 1;
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold:0.3 });
+  cards.forEach(c => observer.observe(c));
+</script>
+
+</body>
+</html>

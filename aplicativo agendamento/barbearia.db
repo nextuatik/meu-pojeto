@@ -1,0 +1,23 @@
+CREATE TABLE barbeiros (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT,
+    foto_url TEXT,
+    ativo INTEGER
+);
+
+CREATE TABLE datas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    data TEXT,
+    ativo INTEGER
+);
+
+CREATE TABLE horarios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome_cliente TEXT,
+    telefone TEXT,
+    servico TEXT,
+    barbeiro_nome TEXT,
+    data TEXT,
+    hora TEXT,
+    observacoes TEXT
+);

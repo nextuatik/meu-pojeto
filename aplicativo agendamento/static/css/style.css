@@ -1,0 +1,60 @@
+body { margin:0; font-family:'Poppins',sans-serif; background:#f5f5f5; color:#333; }
+header { background:#111; color:white; display:flex; justify-content:space-between; align-items:center; padding:15px 40px; }
+header h1 { font-size:1.6rem; }
+nav a { color:white; text-decoration:none; margin-left:20px; transition:0.3s; }
+nav a:hover { color:#d4af37; }
+.container { max-width:700px; margin:60px auto; background:white; padding:40px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+h2 { text-align:center; margin-bottom:25px; color:#222; }
+form { display:flex; flex-direction:column; }
+label { font-weight:bold; margin-bottom:5px; }
+input, select, textarea, button { margin-bottom:20px; padding:10px; border:1px solid #ccc; border-radius:6px; font-size:1rem; }
+button { background:#d4af37; border:none; padding:12px; color:black; font-weight:bold; border-radius:6px; cursor:pointer; transition:0.3s; }
+button:hover { background:#b6932f; }
+.sucesso { background:#e6ffe6; color:#2d7a2d; padding:15px; border-radius:5px; text-align:center; margin-bottom:20px; font-weight:bold; display:none; }
+#horarios-container { margin-top:10px; }
+.secao-horarios { margin-top:10px; }
+.secao-horarios h4 { margin-bottom:5px; color:#555; }
+.horario-disponivel { display:inline-block; padding:10px 15px; margin:5px; border-radius:6px; cursor:pointer; background:#b6f0b6; border:1px solid #2d7a2d; transition:0.2s; }
+.horario-disponivel:hover { background:#2d7a2d; color:white; }
+.horario-indisponivel { display:inline-block; padding:10px 15px; margin:5px; border-radius:6px; background:#f0b6b6; border:1px solid #a12d2d; color:white; cursor:not-allowed; }
+.horario-selecionado { background:#2d7a2d !important; color:white !important; font-weight:bold; }
+
+/* Fundo com imagem, escurecimento, parallax e fade-in */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: url('/static/img/fundo-barbearia.jpg') no-repeat center center fixed;
+  background-size: cover;
+  position: relative;
+  opacity: 0;
+  animation: fadeIn 1.8s ease-in-out forwards;
+  background-attachment: fixed; /* Efeito parallax */
+}
+
+/* Escurecimento e leve desfoque */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: -1;
+}
+
+/* Fade-in suave */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Realce nos elementos sobre o fundo */
+.container, .card, .sidebar, .main, header {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(6px);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
